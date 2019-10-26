@@ -4,3 +4,4 @@ Binaries/
 Build/
 .vs/
 *.sln
+Saved/Logs/*
