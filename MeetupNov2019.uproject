@@ -1,0 +1,13 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{5576DDC9-484F-F93C-EBD1-5B83C5C7EBC1}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "MeetupNov2019",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
