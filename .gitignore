@@ -5,3 +5,4 @@ Build/
 .vs/
 *.sln
 Saved/Logs/*
+Saved/Config/CrashReportClient/*

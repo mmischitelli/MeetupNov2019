@@ -121,8 +121,7 @@ TOptional<float> ProducerThread::GetNextRandomValue()
 TArray<float> ProducerThread::_FillChunk(int chunkSize) const
 {
 	TArray<float> currentChunk;
-	currentChunk.Reserve(chunkSize);
-
+	currentChunk.SetNumUninitialized(chunkSize);
 	UStd::TGenerate_N(currentChunk.CreateIterator(), chunkSize, [&]() {
 		return m_RNG.FRand();
 	});

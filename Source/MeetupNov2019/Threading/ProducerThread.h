@@ -33,7 +33,7 @@ class MEETUPNOV2019_API ProducerThread : public FRunnable
 	TArray<float> m_RandomData;
 	
 public:
-	ProducerThread(int numElems = 30, int chunks = 5);
+	ProducerThread(int numElems = 300, int chunks = 5);
 	~ProducerThread();
 
 	//~ Begin FRunnable Interface.
@@ -48,9 +48,14 @@ public:
 
 	/**
 	 * Returns a float value, if available.
-	 * @return An optional which might contain the a new random float if this thread had enough time to generate some.
+	 * @return An optional which might contain a new random float if this thread had enough time to generate it.
 	 */
 	TOptional<float> GetNextRandomValue();
+	/**
+	 * Use to know how many random values there are inside this producer
+	 * @return The number of available random values
+	 */
+	int GetNumAvailable() const { return m_RandomData.Num(); }
 
 private:
 	TArray<float> _FillChunk(int chunkSize) const;

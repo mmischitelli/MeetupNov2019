@@ -8,3 +8,8 @@ void UPrinterSubsystem::PrintString(const FString& str) const
 {
 	GEngine->AddOnScreenDebugMessage(-1, m_Lifetime, m_Color, str);
 }
+
+void UPrinterSubsystem::PrintString(uint64 key, const FString& str) const
+{
+	GEngine->AddOnScreenDebugMessage(key, m_Lifetime, m_Color, str);
+}

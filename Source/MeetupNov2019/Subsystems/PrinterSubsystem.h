@@ -23,6 +23,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = PrinterSubsystem)
 	void PrintString(const FString& str) const;
+	void PrintString(uint64 key, const FString& str) const;
 
 	UFUNCTION(BlueprintCallable, Category = PrinterSubsystem)
 	void SetColor(const FColor& color) { m_Color = color; }
