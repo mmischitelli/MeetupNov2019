@@ -6,3 +6,4 @@ Build/
 *.sln
 Saved/Logs/*
 Saved/Config/CrashReportClient/*
+enc_temp_folder

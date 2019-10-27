@@ -10,6 +10,8 @@
 
 #include "ProducerSubsystem.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRandomValueReadyDelegate, float, randomValue);
+
 /**
  * 
  */
@@ -22,6 +24,9 @@ class MEETUPNOV2019_API UProducerSubsystem : public UGameInstanceSubsystem
 
 	using ProducerThreadPtr = TUniquePtr<ProducerThread>;
 	TArray<ProducerThreadPtr> m_Producers;
+
+	FRandomValueReadyDelegate m_RandomValueReady;
+	FThreadSafeBool m_PendingKill;
 	
 public:
 
@@ -30,11 +35,19 @@ public:
 	void Deinitialize() override;
 	//~ End USubsystem Interface.
 
-	UFUNCTION(BlueprintCallable, Category = ConsumerSubsystem)
+	FRandomValueReadyDelegate& OnRandomValueReady() { return m_RandomValueReady; }
+
+	UFUNCTION(BlueprintCallable, Category = "ConsumerSubsystem|BusinessLogic")
 	bool AddNewProducer();
-	UFUNCTION(BlueprintCallable, Category = ConsumerSubsystem)
+	UFUNCTION(BlueprintCallable, Category = "ConsumerSubsystem|BusinessLogic")
 	bool RemoveProducer();
 
-	UFUNCTION(BlueprintCallable, Category = ConsumerSubsystem)
+	UFUNCTION(BlueprintCallable, Category = "ConsumerSubsystem|BusinessLogic")
+	void GetRandomValueAsync();
+	
+	TOptional<float> TryGetRandomValue() const;
+
+	UFUNCTION(BlueprintCallable, Category = "ConsumerSubsystem|Debug")
 	void PrintStats() const;
+
 };

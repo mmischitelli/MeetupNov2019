@@ -33,7 +33,7 @@ class MEETUPNOV2019_API ProducerThread : public FRunnable
 	TArray<float> m_RandomData;
 	
 public:
-	ProducerThread(int numElems = 300, int chunks = 5);
+	ProducerThread(int numElems = 100, int chunks = 2);
 	~ProducerThread();
 
 	//~ Begin FRunnable Interface.

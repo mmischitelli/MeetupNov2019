@@ -42,8 +42,6 @@ bool ProducerThread::Init()
 
 uint32 ProducerThread::Run()
 {
-	int filled = 0;
-
 	while (!m_PendingKill)
 	{
 		if (m_Pause)
@@ -54,8 +52,7 @@ uint32 ProducerThread::Run()
 		}
 		else
 		{
-			const auto kChunk = _FillChunk(std::min(m_InitData.ChunkSize, m_InitData.NumElements - filled));
-			filled += kChunk.Num();
+			const auto kChunk = _FillChunk(std::min(m_InitData.ChunkSize, m_InitData.NumElements - m_RandomData.Num()));
 
 			m_Mutex.Lock();
 			m_RandomData.Append(kChunk);

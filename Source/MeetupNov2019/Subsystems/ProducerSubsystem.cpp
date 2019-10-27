@@ -2,6 +2,7 @@
 #include "Engine/Engine.h"
 #include "PrinterSubsystem.h"
 #include "Common/Constants.h"
+#include "Async.h"
 
 void UProducerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -17,6 +18,7 @@ void UProducerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 void UProducerSubsystem::Deinitialize()
 {
+	m_PendingKill = true;
 	UStd::TForEach_N(m_Producers.CreateConstIterator(), m_Producers.Num(), [](const ProducerThreadPtr& thread) {
 		thread->KillAndWait();
 	});
@@ -42,6 +44,41 @@ bool UProducerSubsystem::RemoveProducer()
 	m_Producers.Pop();
 	
 	return true;
+}
+
+void UProducerSubsystem::GetRandomValueAsync()
+{
+	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [&]()
+	{
+		TOptional<float> randValue;
+		while (!randValue.IsSet())
+		{
+			if (m_PendingKill)
+				return;
+			
+			randValue = TryGetRandomValue();
+			if (!randValue.IsSet())
+			{
+				GetGameInstance()->GetSubsystem<UPrinterSubsystem>()->PrintString(PKC::ProducerStr3, "Couldn't find any value, sleeping for a while...");
+				FPlatformProcess::Sleep(0.2);
+			}
+		}
+
+		m_RandomValueReady.Broadcast(randValue.GetValue());
+	});
+}
+
+TOptional<float> UProducerSubsystem::TryGetRandomValue() const
+{
+	const auto kProducer = m_Producers.FindByPredicate([](const ProducerThreadPtr& producer) {
+		return producer->GetNumAvailable() > 0;
+	});
+
+	if (kProducer != nullptr) {
+		return (*kProducer)->GetNextRandomValue();
+	}
+
+	return {};
 }
 
 void UProducerSubsystem::PrintStats() const
