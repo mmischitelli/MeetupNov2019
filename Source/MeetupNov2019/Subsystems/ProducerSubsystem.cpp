@@ -92,3 +92,13 @@ void UProducerSubsystem::PrintStats() const
 
 	kPrinter->PrintString(PKC::ProducerStr2, FString::Printf(TEXT("Available numbers: %d"), kNumValues));
 }
+
+FProducersStats UProducerSubsystem::GetStats() const
+{
+	FProducersStats stats;
+	stats.ProducersInfo.SetNum(m_Producers.Num());
+	UStd::TTransform_N(m_Producers.CreateConstIterator(), m_Producers.Num(), stats.ProducersInfo.CreateIterator(), [i = 0](const ProducerThreadPtr& producer) mutable  {
+		return FProducerInfo{ "Producer#" + FString::FromInt(++i), producer->GetNumAvailable() };
+	});
+	return stats;
+}

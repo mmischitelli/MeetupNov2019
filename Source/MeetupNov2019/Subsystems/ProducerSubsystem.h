@@ -7,6 +7,7 @@
 
 #include "Common\Utils.h"
 #include "Threading\ProducerThread.h"
+#include "Common/DataStructures.h"
 
 #include "ProducerSubsystem.generated.h"
 
@@ -50,4 +51,5 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ConsumerSubsystem|Debug")
 	void PrintStats() const;
 
+	FProducersStats GetStats() const;
 };

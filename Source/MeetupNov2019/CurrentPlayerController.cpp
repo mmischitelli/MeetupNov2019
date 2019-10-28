@@ -5,6 +5,8 @@
 #include "TimerManager.h"
 #include "Common/Constants.h"
 #include "Async.h"
+#include "Engine/World.h"
+#include "Actors/ProducerViewer.h"
 
 ACurrentPlayerController::ACurrentPlayerController()
 	: m_WaitForAsyncTask(false)
@@ -21,6 +23,8 @@ void ACurrentPlayerController::InitPlayerState()
 
 	// Prints stats every half a second
 	GetWorldTimerManager().SetTimer(m_StatsTimerHandle, this, &ACurrentPlayerController::_PrintStats, 0.5f, true);
+
+	GetWorld()->SpawnActor<AProducerViewer>(FVector{ 200, 0, 50 }, FRotator(FQuat{ 0,0,1,0 }));
 }
 
 void ACurrentPlayerController::SetupInputComponent()
