@@ -7,6 +7,7 @@
 #include "Async.h"
 #include "Engine/World.h"
 #include "Actors/ProducerViewer.h"
+#include "Actors/HorizontalLayoutComponent.h"
 
 ACurrentPlayerController::ACurrentPlayerController()
 	: m_WaitForAsyncTask(false)
@@ -21,10 +22,8 @@ void ACurrentPlayerController::InitPlayerState()
 	m_Producer = GetGameInstance()->GetSubsystem<UProducerSubsystem>();
 	m_Producer->OnRandomValueReady().AddDynamic(this, &ACurrentPlayerController::_GotRandomValue);
 
-	// Prints stats every half a second
-	GetWorldTimerManager().SetTimer(m_StatsTimerHandle, this, &ACurrentPlayerController::_PrintStats, 0.5f, true);
-
-	GetWorld()->SpawnActor<AProducerViewer>(FVector{ 200, 0, 50 }, FRotator(FQuat{ 0,0,1,0 }));
+	m_ProducerViewer = GetWorld()->SpawnActor<AProducerViewer>();
+	m_ProducerViewer->SetActorLocationAndRotation(FVector{ 200, 0, 100 }, FRotator(0, 90, 0));
 }
 
 void ACurrentPlayerController::SetupInputComponent()
@@ -37,6 +36,8 @@ void ACurrentPlayerController::SetupInputComponent()
 
 void ACurrentPlayerController::Tick(float DeltaSeconds)
 {
+	m_ProducerViewer->FindComponentByClass<UHorizontalLayoutComponent>()->RefreshPositions();
+	
 	if (m_WaitForAsyncTask)
 		return;
 	
@@ -64,11 +65,6 @@ void ACurrentPlayerController::_KillProducer()
 {
 	m_Printer->PrintString("Killing a producer...");
 	m_Producer->RemoveProducer();
-}
-
-void ACurrentPlayerController::_PrintStats() const
-{
-	m_Producer->PrintStats();
 }
 
 void ACurrentPlayerController::_GotRandomValue(float value)
