@@ -7,11 +7,11 @@ UCLASS()
 class MEETUPNOV2019_API UHorizontalLayoutComponent : public USceneComponent
 {
 	GENERATED_BODY()
-	
-protected:
-	void OnChildAttached(USceneComponent* ChildComponent) override;
-	void OnChildDetached(USceneComponent* ChildComponent) override;
-	
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = HorizontalLayoutComponent, meta = (DisplayName = "Intra-element margin", AllowPrivateAccess = true, ClampMin="0", ClampMax="50"))
+	float m_Margin = 10.0f;
+
 public:
-	void RefreshPositions();
+	UHorizontalLayoutComponent();
+	void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };

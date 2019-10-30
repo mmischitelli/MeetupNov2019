@@ -6,6 +6,7 @@
 #include "RandomStream.h"
 #include "Common\Utils.h"
 #include <algorithm>
+#include <chrono>
 
 ProducerThread::ProducerThread(int numElems, int chunkSize)
 	: m_PendingKill(false)
@@ -58,8 +59,10 @@ uint32 ProducerThread::Run()
 			m_RandomData.Append(kChunk);
 			m_Mutex.Unlock();
 
-			// Generate a chunk of random values every 100ms
-			FPlatformProcess::Sleep(0.1);
+			const auto Start = std::chrono::high_resolution_clock::now();
+			while (!m_PendingKill && std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now() - Start).count() < 1) {
+				FPlatformProcess::Sleep(0.05);
+			}
 		}
 	}
 

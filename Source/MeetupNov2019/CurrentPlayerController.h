@@ -21,8 +21,7 @@ protected:
 	void InitPlayerState() override;
 	void SetupInputComponent() override;
 	void Tick(float DeltaSeconds) override;
-
-	
+		
 private:
 	void _SpawnNewProducer();
 	void _KillProducer();

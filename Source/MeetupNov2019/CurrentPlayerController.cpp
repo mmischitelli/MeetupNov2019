@@ -33,11 +33,8 @@ void ACurrentPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SpawnNewProducer", EInputEvent::IE_Pressed, this, &ACurrentPlayerController::_SpawnNewProducer);
 	InputComponent->BindAction("KillProducer", EInputEvent::IE_Pressed, this, &ACurrentPlayerController::_KillProducer);
 }
-
 void ACurrentPlayerController::Tick(float DeltaSeconds)
 {
-	m_ProducerViewer->FindComponentByClass<UHorizontalLayoutComponent>()->RefreshPositions();
-	
 	if (m_WaitForAsyncTask)
 		return;
 	

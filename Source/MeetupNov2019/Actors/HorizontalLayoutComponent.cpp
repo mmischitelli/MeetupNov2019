@@ -1,35 +1,30 @@
 #include "HorizontalLayoutComponent.h"
 #include "GameFramework/Actor.h"
 #include "Common/Utils.h"
+#include "Engine/Engine.h"
+#include "DrawDebugHelpers.h"
 
-void UHorizontalLayoutComponent::OnChildAttached(USceneComponent* ChildComponent)
+UHorizontalLayoutComponent::UHorizontalLayoutComponent()
 {
-	Super::OnChildAttached(ChildComponent);
-	RefreshPositions();
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UHorizontalLayoutComponent::OnChildDetached(USceneComponent* ChildComponent)
+void UHorizontalLayoutComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::OnChildDetached(ChildComponent);
-	RefreshPositions();
-}
-
-void UHorizontalLayoutComponent::RefreshPositions()
-{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
 	const auto components = GetAttachChildren();
 	if (components.Num() == 0)
 		return;
 
-	const auto Margin = 20;
-	const auto TotalSize = UStd::TAccumulate_N(components.CreateConstIterator(), components.Num(), 0, [&](int curr, USceneComponent* Component) {
-		return curr + Component->CalcLocalBounds().BoxExtent.Z + Margin;
-	});
-	const auto SingleSize = TotalSize / components.Num();
-	const auto StartingOffset = -TotalSize / 2.0f;
-	
-	UStd::TForEach_N(components.CreateConstIterator(), components.Num(), [&, accumSize = 0](USceneComponent* Component) mutable
+	const auto TotalSize = UStd::TAccumulate_N(components.CreateConstIterator(), components.Num(), .0f, [&](float curr, USceneComponent* Component) {
+		return curr + Component->CalcLocalBounds().BoxExtent.Y * 2.0f + m_Margin;
+		});
+	const auto StartingOffset = (-TotalSize + m_Margin) * 0.5f;
+
+	UStd::TForEach_N(components.CreateConstIterator(), components.Num(), [&, accumSize = .0f](USceneComponent* Component) mutable
 	{
-		Component->SetRelativeLocation({ StartingOffset + accumSize, .0f, .0f});
-		accumSize += Component->CalcLocalBounds().BoxExtent.Z + Margin;
+		Component->SetRelativeLocation({ StartingOffset + accumSize, .0f, .0f });
+		accumSize += Component->CalcLocalBounds().BoxExtent.Y * 2.0f + m_Margin;
 	});
 }
