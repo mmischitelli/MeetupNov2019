@@ -21,6 +21,9 @@ class MEETUPNOV2019_API UProducerSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
+	UPROPERTY()
+	class UPrinterSubsystem* m_Printer;
+
 	UDataStructs::TRange<int> m_Limits = UDataStructs::TRange<int>{ 1,5 };
 
 	using ProducerThreadPtr = TUniquePtr<ProducerThread>;
@@ -28,6 +31,8 @@ class MEETUPNOV2019_API UProducerSubsystem : public UGameInstanceSubsystem
 
 	FRandomValueReadyDelegate m_RandomValueReady;
 	FThreadSafeBool m_PendingKill;
+
+	FRandomStream m_Random;
 	
 public:
 

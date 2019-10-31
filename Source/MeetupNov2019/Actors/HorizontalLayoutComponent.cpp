@@ -12,19 +12,25 @@ UHorizontalLayoutComponent::UHorizontalLayoutComponent()
 void UHorizontalLayoutComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
-	const auto components = GetAttachChildren();
-	if (components.Num() == 0)
+
+	TArray<AActor*> Actors;
+	GetOwner()->GetAttachedActors(Actors);
+	if (Actors.Num() == 0)
 		return;
 
-	const auto TotalSize = UStd::TAccumulate_N(components.CreateConstIterator(), components.Num(), .0f, [&](float curr, USceneComponent* Component) {
-		return curr + Component->CalcLocalBounds().BoxExtent.Y * 2.0f + m_Margin;
-		});
+	const auto TotalSize = UStd::TAccumulate_N(Actors.CreateConstIterator(), Actors.Num(), .0f, [&](float curr, AActor* Actor) 
+	{
+		FVector Origin, Extent;
+		Actor->GetActorBounds(true, Origin, Extent);
+		return curr + Extent.Y * 2.0f + m_Margin;
+	});
 	const auto StartingOffset = (-TotalSize + m_Margin) * 0.5f;
 
-	UStd::TForEach_N(components.CreateConstIterator(), components.Num(), [&, accumSize = .0f](USceneComponent* Component) mutable
+	UStd::TForEach_N(Actors.CreateConstIterator(), Actors.Num(), [&, accumSize = .0f](AActor* Actor) mutable
 	{
-		Component->SetRelativeLocation({ StartingOffset + accumSize, .0f, .0f });
-		accumSize += Component->CalcLocalBounds().BoxExtent.Y * 2.0f + m_Margin;
+		FVector Origin, Extent;
+		Actor->GetActorBounds(true, Origin, Extent);
+		Actor->SetActorRelativeLocation({ StartingOffset + accumSize + Extent.Y + m_Margin * 0.5f, .0f, .0f });
+		accumSize += Extent.Y * 2.0f + m_Margin;
 	});
 }

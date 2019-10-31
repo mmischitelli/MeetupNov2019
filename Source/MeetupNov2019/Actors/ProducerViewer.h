@@ -3,6 +3,7 @@
 #include "GameFramework/Actor.h"
 #include "ProducerViewer.generated.h"
 
+class AVisualizer;
 class UHorizontalLayoutComponent;
 struct FProducerInfo;
 
@@ -12,12 +13,15 @@ class MEETUPNOV2019_API AProducerViewer : public AActor
 	GENERATED_BODY()
 
 	class UProducerSubsystem* m_ProducerSubsystem;
-	TMap<FString, class UTextRenderComponent*> m_ProducersMap;
+	TMap<FString, AVisualizer*> m_ProducersMap;
 	FTimerHandle m_LongTickTimer;
 	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "ProducerViewer", meta = (DisplayName = "Horizontal layout component", AllowPrivateAccess = true))
 	UHorizontalLayoutComponent* m_LayoutComponent;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ProducerViewer", meta = (DisplayName = "Visualizer class", AllowPrivateAccess = true))
+	TSubclassOf<AVisualizer> m_VisualizerClass;
+	
 public:
 
 	AProducerViewer(const FObjectInitializer& ObjectInitializer);
@@ -34,13 +38,13 @@ private:
 	 * Does not add it to m_ProducersMap!
 	 * @return The newly created visualizer
 	 */
-	UTextRenderComponent* _Create();
+	AVisualizer* _Create();
 	/**
 	 * Updates the visualizer's content.
-	 * @param Component The visualizer to update
+	 * @param Visualizer The visualizer to update
 	 * @param Data Content that will be displayed in this visualizer
 	 */
-	void _Update(UTextRenderComponent* Component, const FProducerInfo& Data);
+	void _Update(AVisualizer* Visualizer, const FProducerInfo& Data);
 	/**
 	 * Destroys the visualizer identified by the provided key. For safety reasons, also removes the entry in m_ProducersMap.
 	 * @param Key The key in m_ProducersMap corresponding to the visualizer to be deleted

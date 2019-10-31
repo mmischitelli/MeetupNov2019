@@ -9,6 +9,8 @@ void UProducerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	// Tells Unreal that this subsystem depends on UPrinterSubsystem
 	Collection.InitializeDependency(UPrinterSubsystem::StaticClass());
 
+	m_Printer = GetGameInstance()->GetSubsystem<UPrinterSubsystem>();
+	
 	m_Producers.Reserve(m_Limits.Max);
 	m_Producers.SetNum(m_Limits.Min);
 	UStd::TGenerate_N(m_Producers.CreateIterator(), m_Limits.Min, [](){
@@ -59,7 +61,9 @@ void UProducerSubsystem::GetRandomValueAsync()
 			randValue = TryGetRandomValue();
 			if (!randValue.IsSet())
 			{
-				GetGameInstance()->GetSubsystem<UPrinterSubsystem>()->PrintString(PKC::ProducerStr3, "Couldn't find any value, sleeping for a while...");
+				if (m_Printer) {
+					m_Printer->PrintString(PKC::ProducerStr3, "Couldn't find any value, sleeping for a while...");
+				}
 				FPlatformProcess::Sleep(0.2);
 			}
 		}
@@ -70,27 +74,32 @@ void UProducerSubsystem::GetRandomValueAsync()
 
 TOptional<float> UProducerSubsystem::TryGetRandomValue() const
 {
-	const auto kProducer = m_Producers.FindByPredicate([](const ProducerThreadPtr& producer) {
-		return producer->GetNumAvailable() > 0;
-	});
-
-	if (kProducer != nullptr) {
-		return (*kProducer)->GetNextRandomValue();
+	TArray<int> AvailableProducersIndices;
+	for(int i = 0; i < m_Producers.Num(); ++i)
+	{
+		if (m_Producers[i]->GetNumAvailable() > 0)
+			AvailableProducersIndices.Add(i);
 	}
+	
+	if (AvailableProducersIndices.Num() == 0)
+		return {};
 
-	return {};
+	const auto Index = m_Random.RandRange(0, AvailableProducersIndices.Num()-1);
+	return m_Producers[AvailableProducersIndices[Index]]->GetNextRandomValue();
 }
 
 void UProducerSubsystem::PrintStats() const
 {
-	const auto kPrinter = GetGameInstance()->GetSubsystem<UPrinterSubsystem>();
-	kPrinter->PrintString(PKC::ProducerStr1, FString::Printf(TEXT("Producers: %d [%d, %d]"), m_Producers.Num(), m_Limits.Min, m_Limits.Max));
+	if (!m_Printer)
+		return;
+	
+	m_Printer->PrintString(PKC::ProducerStr1, FString::Printf(TEXT("Producers: %d [%d, %d]"), m_Producers.Num(), m_Limits.Min, m_Limits.Max));
 
 	const auto kNumValues = UStd::TAccumulate_N(m_Producers.CreateConstIterator(), m_Producers.Num(), 0, [](int curr, const ProducerThreadPtr& thread) {
 		return curr + thread->GetNumAvailable();
 	});
 
-	kPrinter->PrintString(PKC::ProducerStr2, FString::Printf(TEXT("Available numbers: %d"), kNumValues));
+	m_Printer->PrintString(PKC::ProducerStr2, FString::Printf(TEXT("Available numbers: %d"), kNumValues));
 }
 
 FProducersStats UProducerSubsystem::GetStats() const
