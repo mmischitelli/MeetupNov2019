@@ -32,7 +32,7 @@ void ACurrentPlayerController::InitPlayerState()
 		m_ProducerViewer->SetActorLocationAndRotation(FVector{ 200, 0, 0 }, FRotator(0, 90, 0));
 	}
 
-	GetWorldTimerManager().SetTimer(m_LongTickTimer, this, &ACurrentPlayerController::_ConsumeCrates, 0.15f, true);
+	GetWorldTimerManager().SetTimer(m_LongTickTimer, this, &ACurrentPlayerController::_ConsumeRandomValue, 0.15f, true);
 }
 
 void ACurrentPlayerController::SetupInputComponent()
@@ -55,7 +55,7 @@ void ACurrentPlayerController::_KillProducer()
 	m_Producer->RemoveProducer();
 }
 
-void ACurrentPlayerController::_ConsumeCrates()
+void ACurrentPlayerController::_ConsumeRandomValue()
 {
 	if (m_WaitForAsyncTask)
 		return;
@@ -66,7 +66,7 @@ void ACurrentPlayerController::_ConsumeCrates()
 		return;
 	}
 
-	m_Printer->PrintString(PKC::PlayerCtrlStr1, FString::Printf(TEXT("Sum thus far: %.2f"), m_Sum));
+	m_Printer->PrintString(PKC::PlayerCtrlStr1, FString::Printf(TEXT("There are no values available... waiting for a new one. Sum thus far: %.2f"), m_Sum));
 
 	m_Sum = 0;
 	m_WaitForAsyncTask = true;
@@ -76,6 +76,6 @@ void ACurrentPlayerController::_ConsumeCrates()
 
 void ACurrentPlayerController::_GotRandomValue(float value)
 {
-	m_Printer->PrintString(PKC::PlayerCtrlStr2, FString::Printf(TEXT("Received new value: %0.2f"), value));
-	AsyncTask(ENamedThreads::GameThread, [&]() { m_WaitForAsyncTask = false; });
+	m_Printer->PrintString(PKC::PlayerCtrlStr2, TEXT("New value received, resuming the consumer..."));
+	m_WaitForAsyncTask = false;
 }

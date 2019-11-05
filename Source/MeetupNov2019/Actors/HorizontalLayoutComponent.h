@@ -3,6 +3,10 @@
 #include "Components/SceneComponent.h"
 #include "HorizontalLayoutComponent.generated.h"
 
+/**
+ * @class UHorizontalLayoutComponent
+ * @brief Helps the AProducerViewer in rearranging paddocks in a straight line
+ */
 UCLASS()
 class MEETUPNOV2019_API UHorizontalLayoutComponent : public USceneComponent
 {

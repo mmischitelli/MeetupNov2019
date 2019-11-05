@@ -15,25 +15,31 @@ class FRunnableThread;
  */
 class MEETUPNOV2019_API ProducerThread : public FRunnable
 {
+	/** The actual thread this FRunnable runs on */
 	FRunnableThread* m_Thread;
-
+	/** Mutex to synchronize access to m_RandomData */
 	FCriticalSection m_Mutex;
+	/** Semaphore used to wake up the thread from sleep */
 	FEvent* m_Semaphore;
-	
-	FThreadSafeBool m_PendingKill;
-	FThreadSafeBool m_Pause;
 
+	/** Thread safe flag used to kill this thread gracefully */
+	FThreadSafeBool m_PendingKill;
+	/** Thread safe flag used to put this thread to sleep */
+	FThreadSafeBool m_Pause;
+	/** Struct that holds initialization data */
 	struct InitDataStruct
 	{
 		int NumElements;
 		int ChunkSize;
 	} m_InitData;
 
+	/** Unreal's PRNG facility*/
 	FRandomStream m_RNG;
+	/** Stock of generated numbers */
 	TArray<float> m_RandomData;
 	
 public:
-	ProducerThread(int numElems = 100, int chunks = 2);
+	ProducerThread(int numElems = 16, int chunks = 2);
 	~ProducerThread();
 
 	//~ Begin FRunnable Interface.
@@ -42,8 +48,11 @@ public:
 	void Stop() override;
 	//~ End FRunnable Interface.
 
+	/** Wait for this thread to actually die */
 	void KillAndWait();
+	/** Puts this producer to sleep */
 	void Pause();
+	/** Resumes producing random numbers */
 	void Continue();
 
 	/**

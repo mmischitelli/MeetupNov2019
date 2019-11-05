@@ -6,6 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "Visualizer.generated.h"
 
+/**
+ * @class AVisualizer
+ * @brief Represents a single paddock where crates are spawned
+ */
 UCLASS()
 class MEETUPNOV2019_API AVisualizer : public AActor
 {
@@ -17,6 +21,7 @@ public:
 
 	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+	/** Spawns a new crate mid-air over this paddock */
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void SpawnNewElement();
 };

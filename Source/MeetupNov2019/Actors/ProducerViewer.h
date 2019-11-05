@@ -7,6 +7,10 @@ class AVisualizer;
 class UHorizontalLayoutComponent;
 struct FProducerInfo;
 
+/**
+ * @class AProducerViewer
+ * @brief Actor that spawns, destroys and updates paddock, each representing a producer.
+ */
 UCLASS(Blueprintable)
 class MEETUPNOV2019_API AProducerViewer : public AActor
 {
