@@ -31,9 +31,9 @@ class MEETUPNOV2019_API ACurrentPlayerController : public APlayerController
 protected:
 	ACurrentPlayerController();
 
-	//~ Begin AController interface
-	/** Spawns and initializes the PlayerState for this Controller */
-	void InitPlayerState() override;
+	//~ Begin AActor interface
+	/** Called when this player controller starts playing in game */
+	void BeginPlay() override;
 	//~ End AController interface
 
 	//~ Begin APlayerController interface

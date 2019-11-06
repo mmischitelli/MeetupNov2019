@@ -14,18 +14,19 @@ ACurrentPlayerController::ACurrentPlayerController()
 	, m_Sum(0)
 { }
 
-void ACurrentPlayerController::InitPlayerState()
-{
-	Super::InitPlayerState();
 
-	auto gameInstance = GetGameInstance();
-	if (gameInstance)
+void ACurrentPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	const auto GameInstance = GetGameInstance();
+	if (GameInstance)
 	{
-		m_Printer = GetGameInstance()->GetSubsystem<UPrinterSubsystem>();
-		m_Producer = GetGameInstance()->GetSubsystem<UProducerSubsystem>();
+		m_Printer = GameInstance->GetSubsystem<UPrinterSubsystem>();
+		m_Producer = GameInstance->GetSubsystem<UProducerSubsystem>();
 		m_Producer->OnRandomValueReady().AddDynamic(this, &ACurrentPlayerController::_GotRandomValue);
 	}
-	
+
 	if (m_ProducerViewerClass)
 	{
 		m_ProducerViewer = GetWorld()->SpawnActor<AProducerViewer>(m_ProducerViewerClass);
@@ -57,7 +58,7 @@ void ACurrentPlayerController::_KillProducer()
 
 void ACurrentPlayerController::_ConsumeRandomValue()
 {
-	if (m_WaitForAsyncTask)
+	if (m_WaitForAsyncTask || m_Producer == nullptr)
 		return;
 
 	const auto kValue = m_Producer->TryGetRandomValue();
