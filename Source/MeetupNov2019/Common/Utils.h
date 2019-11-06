@@ -146,4 +146,21 @@ namespace UStd
 		}
 		return init;
 	}
+
+	template<class InputIt, class OutputIt, class UnaryOperation>
+	OutputIt TTransform(InputIt firstInput, InputIt lastInput, OutputIt firstOutput, UnaryOperation op)
+	{
+		while (firstInput != lastInput) {
+			*firstOutput++ = op(*firstInput++);
+		}
+		return firstOutput;
+	}
+	template<class InputIt, class OutputIt, class UnaryOperation>
+	OutputIt TTransform_N(InputIt firstInput, int n, OutputIt firstOutput, UnaryOperation op)
+	{
+		for (int i = 0; i < n; ++i, ++firstInput) {
+			*firstOutput++ = op(*firstInput);
+		}
+		return firstOutput;
+	}
 }

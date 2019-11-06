@@ -7,7 +7,8 @@
 #include "PrinterSubsystem.generated.h"
 
 /**
- * 
+ * @class UPrinterSubsystem
+ * @brief Handy class that prints to the local player's screen
  */
 UCLASS(DisplayName = "PrinterSubsystem")
 class MEETUPNOV2019_API UPrinterSubsystem : public UGameInstanceSubsystem
