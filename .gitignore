@@ -2,14 +2,7 @@ DerivedDataCache/
 Intermediate/
 Binaries/
 Build/
+Saved/
 .vs/
 *.sln
-Saved/Logs/*
-Saved/Config/CrashReportClient/*
 enc_temp_folder
-/Saved/Backup
-/Saved/Config/WorldState
-/Saved/Cooked/WindowsNoEditor
-/Saved/StagedBuilds/WindowsNoEditor
-/Saved/Temp/Win64
-/Saved/Profiling/UnrealStats
