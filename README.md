@@ -20,3 +20,6 @@ Clone UE4 source code to your computer, set it up by running Setup.bat and Gener
 I'd suggest to compile the engine before compiling the project, just to make sure everything works.
 
 Then clone this repo and right-click on the .uproject -> Generate Project Files. Once finished, double-click on the .sln to open Visual Studio, then hit F5 to launch the project with the debugger attached.
+
+## Disclaimer
+Some assets come from the [Advanced Village Pack](https://www.unrealengine.com/marketplace/en-US/slug/advanced-village-pack), while others (I think just the grass on the floor) are included in the Unreal's Starter Content pack.
