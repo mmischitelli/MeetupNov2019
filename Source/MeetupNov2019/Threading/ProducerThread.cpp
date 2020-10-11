@@ -1,12 +1,12 @@
 #include "ProducerThread.h"
-#include "GenericPlatformProcess.h"
-#include "RunnableThread.h"
-#include "PlatformProcess.h"
-#include "Event.h"
-#include "RandomStream.h"
-#include "Common\Utils.h"
 #include <algorithm>
 #include <chrono>
+#include "GenericPlatform/GenericPlatformAffinity.h"
+#include "GenericPlatform/GenericPlatformProcess.h"
+#include "HAL/Event.h"
+#include "HAL/RunnableThread.h"
+#include "MeetupNov2019/Common/Utils.h"
+#include "Windows/WindowsPlatformProcess.h"
 
 ProducerThread::ProducerThread(int numElems, int chunkSize)
 	: m_PendingKill(false)

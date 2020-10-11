@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Runnable.h"
-#include "WindowsCriticalSection.h"
-#include "ThreadSafeBool.h"
-#include "Array.h"
-#include "RandomStream.h"
+#include "HAL/Runnable.h"
+#include "HAL/ThreadSafeBool.h"
+#include "Math/RandomStream.h"
 
 class FWindowsCriticalSection;
 class FRunnableThread;

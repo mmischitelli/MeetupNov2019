@@ -8,6 +8,7 @@ public class MeetupNov2019EditorTarget : TargetRules
 	public MeetupNov2019EditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
+        DefaultBuildSettings = BuildSettingsVersion.V2;
 
 		ExtraModuleNames.AddRange( new string[] { "MeetupNov2019" } );
 	}

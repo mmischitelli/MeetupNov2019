@@ -1,8 +1,7 @@
 #include "HorizontalLayoutComponent.h"
 #include "GameFramework/Actor.h"
-#include "Common/Utils.h"
+#include "MeetupNov2019/Common/Utils.h"
 #include "Engine/Engine.h"
-#include "DrawDebugHelpers.h"
 
 UHorizontalLayoutComponent::UHorizontalLayoutComponent()
 {

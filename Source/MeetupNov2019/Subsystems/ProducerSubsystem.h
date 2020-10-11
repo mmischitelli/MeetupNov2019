@@ -4,10 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-
-#include "Common\Utils.h"
-#include "Threading\ProducerThread.h"
-#include "Common/DataStructures.h"
+#include "MeetupNov2019/Common/DataStructures.h"
+#include "MeetupNov2019/Common/Utils.h"
+#include "MeetupNov2019/Threading/ProducerThread.h"
 
 #include "ProducerSubsystem.generated.h"
 
